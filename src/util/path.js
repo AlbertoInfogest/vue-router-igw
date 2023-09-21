@@ -10,7 +10,7 @@ export function resolvePath (
     return relative
   }
 
-  if (firstChar === '?' || firstChar === '#') {
+  if (firstChar === '?' || firstChar === '§') {
     return base + relative
   }
 
@@ -43,14 +43,14 @@ export function resolvePath (
 }
 
 export function parsePath (path: string): {
-  path: string;
-  query: string;
-  hash: string;
+  path: string,
+  query: string,
+  hash: string,
 } {
   let hash = ''
   let query = ''
 
-  const hashIndex = path.indexOf('#')
+  const hashIndex = path.indexOf('§')
   if (hashIndex >= 0) {
     hash = path.slice(hashIndex)
     path = path.slice(0, hashIndex)

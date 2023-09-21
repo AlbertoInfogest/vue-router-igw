@@ -39,7 +39,10 @@ export default class VueRouter {
 
   constructor (options: RouterOptions = {}) {
     if (process.env.NODE_ENV !== 'production') {
-      warn(this instanceof VueRouter, `Router must be called with the new operator.`)
+      warn(
+        this instanceof VueRouter,
+        `Router must be called with the new operator.`
+      )
     }
     this.app = null
     this.apps = []
@@ -119,7 +122,7 @@ export default class VueRouter {
     const history = this.history
 
     if (history instanceof HTML5History || history instanceof HashHistory) {
-      const handleInitialScroll = routeOrError => {
+      const handleInitialScroll = (routeOrError) => {
         const from = history.current
         const expectScroll = this.options.scrollBehavior
         const supportsScroll = supportsPushState && expectScroll
@@ -128,7 +131,7 @@ export default class VueRouter {
           handleScroll(this, routeOrError, from, false)
         }
       }
-      const setupListeners = routeOrError => {
+      const setupListeners = (routeOrError) => {
         history.setupListeners()
         handleInitialScroll(routeOrError)
       }
@@ -139,8 +142,8 @@ export default class VueRouter {
       )
     }
 
-    history.listen(route => {
-      this.apps.forEach(app => {
+    history.listen((route) => {
+      this.apps.forEach((app) => {
         app._route = route
       })
     })
@@ -211,8 +214,8 @@ export default class VueRouter {
     }
     return [].concat.apply(
       [],
-      route.matched.map(m => {
-        return Object.keys(m.components).map(key => {
+      route.matched.map((m) => {
+        return Object.keys(m.components).map((key) => {
           return m.components[key]
         })
       })
@@ -229,7 +232,7 @@ export default class VueRouter {
     href: string,
     // for backwards compat
     normalizedTo: Location,
-    resolved: Route
+    resolved: Route,
   } {
     current = current || this.history.current
     const location = normalizeLocation(to, current, append, this)
@@ -260,7 +263,10 @@ export default class VueRouter {
 
   addRoutes (routes: Array<RouteConfig>) {
     if (process.env.NODE_ENV !== 'production') {
-      warn(false, 'router.addRoutes() is deprecated and has been removed in Vue Router 4. Use router.addRoute() instead.')
+      warn(
+        false,
+        'router.addRoutes() is deprecated and has been removed in Vue Router 4. Use router.addRoute() instead.'
+      )
     }
     this.matcher.addRoutes(routes)
     if (this.history.current !== START) {
@@ -278,7 +284,7 @@ function registerHook (list: Array<any>, fn: Function): Function {
 }
 
 function createHref (base: string, fullPath: string, mode) {
-  var path = mode === 'hash' ? '#' + fullPath : fullPath
+  var path = mode === 'hash' ? '§' + fullPath : fullPath
   return base ? cleanPath(base + '/' + path) : path
 }
 

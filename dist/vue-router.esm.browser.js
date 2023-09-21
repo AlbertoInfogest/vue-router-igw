@@ -1,6 +1,6 @@
 /*!
   * vue-router v3.6.5
-  * (c) 2022 Evan You
+  * (c) 2023 Evan You
   * @license MIT
   */
 /*  */
@@ -27,18 +27,18 @@ function extend (a, b) {
 /*  */
 
 const encodeReserveRE = /[!'()*]/g;
-const encodeReserveReplacer = c => '%' + c.charCodeAt(0).toString(16);
+const encodeReserveReplacer = (c) => '%' + c.charCodeAt(0).toString(16);
 const commaRE = /%2C/g;
 
 // fixed encodeURIComponent which is more conformant to RFC3986:
 // - escapes [!'()*]
 // - preserve commas
-const encode = str =>
+const encode = (str) =>
   encodeURIComponent(str)
     .replace(encodeReserveRE, encodeReserveReplacer)
     .replace(commaRE, ',');
 
-function decode (str) {
+function decode(str) {
   try {
     return decodeURIComponent(str)
   } catch (err) {
@@ -49,7 +49,7 @@ function decode (str) {
   return str
 }
 
-function resolveQuery (
+function resolveQuery(
   query,
   extraQuery = {},
   _parseQuery
@@ -71,18 +71,19 @@ function resolveQuery (
   return parsedQuery
 }
 
-const castQueryParamValue = value => (value == null || typeof value === 'object' ? value : String(value));
+const castQueryParamValue = (value) =>
+  value == null || typeof value === 'object' ? value : String(value);
 
-function parseQuery (query) {
+function parseQuery(query) {
   const res = {};
 
-  query = query.trim().replace(/^(\?|#|&)/, '');
+  query = query.trim().replace(/^(\?|§|&)/, '');
 
   if (!query) {
     return res
   }
 
-  query.split('&').forEach(param => {
+  query.split('&').forEach((param) => {
     const parts = param.replace(/\+/g, ' ').split('=');
     const key = decode(parts.shift());
     const val = parts.length > 0 ? decode(parts.join('=')) : null;
@@ -99,39 +100,39 @@ function parseQuery (query) {
   return res
 }
 
-function stringifyQuery (obj) {
+function stringifyQuery(obj) {
   const res = obj
     ? Object.keys(obj)
-      .map(key => {
-        const val = obj[key];
+        .map((key) => {
+          const val = obj[key];
 
-        if (val === undefined) {
-          return ''
-        }
+          if (val === undefined) {
+            return ''
+          }
 
-        if (val === null) {
-          return encode(key)
-        }
+          if (val === null) {
+            return encode(key)
+          }
 
-        if (Array.isArray(val)) {
-          const result = [];
-          val.forEach(val2 => {
-            if (val2 === undefined) {
-              return
-            }
-            if (val2 === null) {
-              result.push(encode(key));
-            } else {
-              result.push(encode(key) + '=' + encode(val2));
-            }
-          });
-          return result.join('&')
-        }
+          if (Array.isArray(val)) {
+            const result = [];
+            val.forEach((val2) => {
+              if (val2 === undefined) {
+                return
+              }
+              if (val2 === null) {
+                result.push(encode(key));
+              } else {
+                result.push(encode(key) + '=' + encode(val2));
+              }
+            });
+            return result.join('&')
+          }
 
-        return encode(key) + '=' + encode(val)
-      })
-      .filter(x => x.length > 0)
-      .join('&')
+          return encode(key) + '=' + encode(val)
+        })
+        .filter((x) => x.length > 0)
+        .join('&')
     : null;
   return res ? `?${res}` : ''
 }
@@ -439,7 +440,7 @@ function resolveProps (route, config) {
 
 /*  */
 
-function resolvePath (
+function resolvePath(
   relative,
   base,
   append
@@ -449,7 +450,7 @@ function resolvePath (
     return relative
   }
 
-  if (firstChar === '?' || firstChar === '#') {
+  if (firstChar === '?' || firstChar === '§') {
     return base + relative
   }
 
@@ -481,11 +482,11 @@ function resolvePath (
   return stack.join('/')
 }
 
-function parsePath (path) {
+function parsePath(path) {
   let hash = '';
   let query = '';
 
-  const hashIndex = path.indexOf('#');
+  const hashIndex = path.indexOf('§');
   if (hashIndex >= 0) {
     hash = path.slice(hashIndex);
     path = path.slice(0, hashIndex);
@@ -500,11 +501,11 @@ function parsePath (path) {
   return {
     path,
     query,
-    hash
+    hash,
   }
 }
 
-function cleanPath (path) {
+function cleanPath(path) {
   return path.replace(/\/(?:\s*\/)+/g, '/')
 }
 
@@ -976,7 +977,7 @@ function fillParams (
 
 /*  */
 
-function normalizeLocation (
+function normalizeLocation(
   raw,
   current,
   append,
@@ -1025,15 +1026,15 @@ function normalizeLocation (
   );
 
   let hash = next.hash || parsedPath.hash;
-  if (hash && hash.charAt(0) !== '#') {
-    hash = `#${hash}`;
+  if (hash && hash.charAt(0) !== '§') {
+    hash = `§${hash}`;
   }
 
   return {
     _normalized: true,
     path,
     query,
-    hash
+    hash,
   }
 }
 
@@ -1763,7 +1764,7 @@ function setStateKey (key) {
 
 const positionStore = Object.create(null);
 
-function setupScroll () {
+function setupScroll() {
   // Prevent browser scroll behavior on History popstate
   if ('scrollRestoration' in window.history) {
     window.history.scrollRestoration = 'manual';
@@ -1785,7 +1786,7 @@ function setupScroll () {
   }
 }
 
-function handleScroll (
+function handleScroll(
   router,
   to,
   from,
@@ -1820,10 +1821,10 @@ function handleScroll (
 
     if (typeof shouldScroll.then === 'function') {
       shouldScroll
-        .then(shouldScroll => {
+        .then((shouldScroll) => {
           scrollToPosition((shouldScroll), position);
         })
-        .catch(err => {
+        .catch((err) => {
           {
             assert(false, err.toString());
           }
@@ -1834,65 +1835,65 @@ function handleScroll (
   });
 }
 
-function saveScrollPosition () {
+function saveScrollPosition() {
   const key = getStateKey();
   if (key) {
     positionStore[key] = {
       x: window.pageXOffset,
-      y: window.pageYOffset
+      y: window.pageYOffset,
     };
   }
 }
 
-function handlePopState (e) {
+function handlePopState(e) {
   saveScrollPosition();
   if (e.state && e.state.key) {
     setStateKey(e.state.key);
   }
 }
 
-function getScrollPosition () {
+function getScrollPosition() {
   const key = getStateKey();
   if (key) {
     return positionStore[key]
   }
 }
 
-function getElementPosition (el, offset) {
+function getElementPosition(el, offset) {
   const docEl = document.documentElement;
   const docRect = docEl.getBoundingClientRect();
   const elRect = el.getBoundingClientRect();
   return {
     x: elRect.left - docRect.left - offset.x,
-    y: elRect.top - docRect.top - offset.y
+    y: elRect.top - docRect.top - offset.y,
   }
 }
 
-function isValidPosition (obj) {
+function isValidPosition(obj) {
   return isNumber(obj.x) || isNumber(obj.y)
 }
 
-function normalizePosition (obj) {
+function normalizePosition(obj) {
   return {
     x: isNumber(obj.x) ? obj.x : window.pageXOffset,
-    y: isNumber(obj.y) ? obj.y : window.pageYOffset
+    y: isNumber(obj.y) ? obj.y : window.pageYOffset,
   }
 }
 
-function normalizeOffset (obj) {
+function normalizeOffset(obj) {
   return {
     x: isNumber(obj.x) ? obj.x : 0,
-    y: isNumber(obj.y) ? obj.y : 0
+    y: isNumber(obj.y) ? obj.y : 0,
   }
 }
 
-function isNumber (v) {
+function isNumber(v) {
   return typeof v === 'number'
 }
 
-const hashStartsWithNumberRE = /^#\d/;
+const hashStartsWithNumberRE = /^§\d/;
 
-function scrollToPosition (shouldScroll, position) {
+function scrollToPosition(shouldScroll, position) {
   const isObject = typeof shouldScroll === 'object';
   if (isObject && typeof shouldScroll.selector === 'string') {
     // getElementById would still fail if the selector contains a more complicated query like #main[data-attr]
@@ -1922,7 +1923,7 @@ function scrollToPosition (shouldScroll, position) {
         left: position.x,
         top: position.y,
         // $flow-disable-line
-        behavior: shouldScroll.behavior
+        behavior: shouldScroll.behavior,
       });
     } else {
       window.scrollTo(position.x, position.y);
@@ -2636,7 +2637,7 @@ function getLocation (base) {
 /*  */
 
 class HashHistory extends History {
-  constructor (router, base, fallback) {
+  constructor(router, base, fallback) {
     super(router, base);
     // check history fallback deeplinking
     if (fallback && checkFallback(this.base)) {
@@ -2647,7 +2648,7 @@ class HashHistory extends History {
 
   // this is delayed until the app mounts
   // to avoid the hashchange listener being fired too early
-  setupListeners () {
+  setupListeners() {
     if (this.listeners.length > 0) {
       return
     }
@@ -2665,7 +2666,7 @@ class HashHistory extends History {
       if (!ensureSlash()) {
         return
       }
-      this.transitionTo(getHash(), route => {
+      this.transitionTo(getHash(), (route) => {
         if (supportsScroll) {
           handleScroll(this.router, route, current, true);
         }
@@ -2675,20 +2676,17 @@ class HashHistory extends History {
       });
     };
     const eventType = supportsPushState ? 'popstate' : 'hashchange';
-    window.addEventListener(
-      eventType,
-      handleRoutingEvent
-    );
+    window.addEventListener(eventType, handleRoutingEvent);
     this.listeners.push(() => {
       window.removeEventListener(eventType, handleRoutingEvent);
     });
   }
 
-  push (location, onComplete, onAbort) {
+  push(location, onComplete, onAbort) {
     const { current: fromRoute } = this;
     this.transitionTo(
       location,
-      route => {
+      (route) => {
         pushHash(route.fullPath);
         handleScroll(this.router, route, fromRoute, false);
         onComplete && onComplete(route);
@@ -2697,11 +2695,11 @@ class HashHistory extends History {
     );
   }
 
-  replace (location, onComplete, onAbort) {
+  replace(location, onComplete, onAbort) {
     const { current: fromRoute } = this;
     this.transitionTo(
       location,
-      route => {
+      (route) => {
         replaceHash(route.fullPath);
         handleScroll(this.router, route, fromRoute, false);
         onComplete && onComplete(route);
@@ -2710,31 +2708,31 @@ class HashHistory extends History {
     );
   }
 
-  go (n) {
+  go(n) {
     window.history.go(n);
   }
 
-  ensureURL (push) {
+  ensureURL(push) {
     const current = this.current.fullPath;
     if (getHash() !== current) {
       push ? pushHash(current) : replaceHash(current);
     }
   }
 
-  getCurrentLocation () {
+  getCurrentLocation() {
     return getHash()
   }
 }
 
-function checkFallback (base) {
+function checkFallback(base) {
   const location = getLocation(base);
-  if (!/^\/#/.test(location)) {
-    window.location.replace(cleanPath(base + '/#' + location));
+  if (!/^\/§/.test(location)) {
+    window.location.replace(cleanPath(base + '/§' + location));
     return true
   }
 }
 
-function ensureSlash () {
+function ensureSlash() {
   const path = getHash();
   if (path.charAt(0) === '/') {
     return true
@@ -2743,11 +2741,11 @@ function ensureSlash () {
   return false
 }
 
-function getHash () {
+function getHash() {
   // We can't use window.location.hash here because it's not
   // consistent across browsers - Firefox will pre-decode it!
   let href = window.location.href;
-  const index = href.indexOf('#');
+  const index = href.indexOf('§');
   // empty path
   if (index < 0) return ''
 
@@ -2756,14 +2754,14 @@ function getHash () {
   return href
 }
 
-function getUrl (path) {
+function getUrl(path) {
   const href = window.location.href;
-  const i = href.indexOf('#');
+  const i = href.indexOf('§');
   const base = i >= 0 ? href.slice(0, i) : href;
-  return `${base}#${path}`
+  return `${base}§${path}`
 }
 
-function pushHash (path) {
+function pushHash(path) {
   if (supportsPushState) {
     pushState(getUrl(path));
   } else {
@@ -2771,7 +2769,7 @@ function pushHash (path) {
   }
 }
 
-function replaceHash (path) {
+function replaceHash(path) {
   if (supportsPushState) {
     replaceState(getUrl(path));
   } else {
@@ -2872,9 +2870,12 @@ class VueRouter {
   
   
 
-  constructor (options = {}) {
+  constructor(options = {}) {
     {
-      warn(this instanceof VueRouter, `Router must be called with the new operator.`);
+      warn(
+        this instanceof VueRouter,
+        `Router must be called with the new operator.`
+      );
     }
     this.app = null;
     this.apps = [];
@@ -2912,15 +2913,15 @@ class VueRouter {
     }
   }
 
-  match (raw, current, redirectedFrom) {
+  match(raw, current, redirectedFrom) {
     return this.matcher.match(raw, current, redirectedFrom)
   }
 
-  get currentRoute () {
+  get currentRoute() {
     return this.history && this.history.current
   }
 
-  init (app /* Vue component instance */) {
+  init(app /* Vue component instance */) {
     assert(
         install.installed,
         `not installed. Make sure to call \`Vue.use(VueRouter)\` ` +
@@ -2953,7 +2954,7 @@ class VueRouter {
     const history = this.history;
 
     if (history instanceof HTML5History || history instanceof HashHistory) {
-      const handleInitialScroll = routeOrError => {
+      const handleInitialScroll = (routeOrError) => {
         const from = history.current;
         const expectScroll = this.options.scrollBehavior;
         const supportsScroll = supportsPushState && expectScroll;
@@ -2962,7 +2963,7 @@ class VueRouter {
           handleScroll(this, routeOrError, from, false);
         }
       };
-      const setupListeners = routeOrError => {
+      const setupListeners = (routeOrError) => {
         history.setupListeners();
         handleInitialScroll(routeOrError);
       };
@@ -2973,34 +2974,34 @@ class VueRouter {
       );
     }
 
-    history.listen(route => {
-      this.apps.forEach(app => {
+    history.listen((route) => {
+      this.apps.forEach((app) => {
         app._route = route;
       });
     });
   }
 
-  beforeEach (fn) {
+  beforeEach(fn) {
     return registerHook(this.beforeHooks, fn)
   }
 
-  beforeResolve (fn) {
+  beforeResolve(fn) {
     return registerHook(this.resolveHooks, fn)
   }
 
-  afterEach (fn) {
+  afterEach(fn) {
     return registerHook(this.afterHooks, fn)
   }
 
-  onReady (cb, errorCb) {
+  onReady(cb, errorCb) {
     this.history.onReady(cb, errorCb);
   }
 
-  onError (errorCb) {
+  onError(errorCb) {
     this.history.onError(errorCb);
   }
 
-  push (location, onComplete, onAbort) {
+  push(location, onComplete, onAbort) {
     // $flow-disable-line
     if (!onComplete && !onAbort && typeof Promise !== 'undefined') {
       return new Promise((resolve, reject) => {
@@ -3011,7 +3012,7 @@ class VueRouter {
     }
   }
 
-  replace (location, onComplete, onAbort) {
+  replace(location, onComplete, onAbort) {
     // $flow-disable-line
     if (!onComplete && !onAbort && typeof Promise !== 'undefined') {
       return new Promise((resolve, reject) => {
@@ -3022,19 +3023,19 @@ class VueRouter {
     }
   }
 
-  go (n) {
+  go(n) {
     this.history.go(n);
   }
 
-  back () {
+  back() {
     this.go(-1);
   }
 
-  forward () {
+  forward() {
     this.go(1);
   }
 
-  getMatchedComponents (to) {
+  getMatchedComponents(to) {
     const route = to
       ? to.matched
         ? to
@@ -3045,15 +3046,15 @@ class VueRouter {
     }
     return [].concat.apply(
       [],
-      route.matched.map(m => {
-        return Object.keys(m.components).map(key => {
+      route.matched.map((m) => {
+        return Object.keys(m.components).map((key) => {
           return m.components[key]
         })
       })
     )
   }
 
-  resolve (
+  resolve(
     to,
     current,
     append
@@ -3070,24 +3071,27 @@ class VueRouter {
       href,
       // for backwards compat
       normalizedTo: location,
-      resolved: route
+      resolved: route,
     }
   }
 
-  getRoutes () {
+  getRoutes() {
     return this.matcher.getRoutes()
   }
 
-  addRoute (parentOrRoute, route) {
+  addRoute(parentOrRoute, route) {
     this.matcher.addRoute(parentOrRoute, route);
     if (this.history.current !== START) {
       this.history.transitionTo(this.history.getCurrentLocation());
     }
   }
 
-  addRoutes (routes) {
+  addRoutes(routes) {
     {
-      warn(false, 'router.addRoutes() is deprecated and has been removed in Vue Router 4. Use router.addRoute() instead.');
+      warn(
+        false,
+        'router.addRoutes() is deprecated and has been removed in Vue Router 4. Use router.addRoute() instead.'
+      );
     }
     this.matcher.addRoutes(routes);
     if (this.history.current !== START) {
@@ -3096,7 +3100,7 @@ class VueRouter {
   }
 }
 
-function registerHook (list, fn) {
+function registerHook(list, fn) {
   list.push(fn);
   return () => {
     const i = list.indexOf(fn);
@@ -3104,8 +3108,8 @@ function registerHook (list, fn) {
   }
 }
 
-function createHref (base, fullPath, mode) {
-  var path = mode === 'hash' ? '#' + fullPath : fullPath;
+function createHref(base, fullPath, mode) {
+  var path = mode === 'hash' ? '§' + fullPath : fullPath;
   return base ? cleanPath(base + '/' + path) : path
 }
 

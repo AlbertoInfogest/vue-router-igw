@@ -3,13 +3,13 @@
 import { warn } from './warn'
 
 const encodeReserveRE = /[!'()*]/g
-const encodeReserveReplacer = c => '%' + c.charCodeAt(0).toString(16)
+const encodeReserveReplacer = (c) => '%' + c.charCodeAt(0).toString(16)
 const commaRE = /%2C/g
 
 // fixed encodeURIComponent which is more conformant to RFC3986:
 // - escapes [!'()*]
 // - preserve commas
-const encode = str =>
+const encode = (str) =>
   encodeURIComponent(str)
     .replace(encodeReserveRE, encodeReserveReplacer)
     .replace(commaRE, ',')
@@ -47,18 +47,19 @@ export function resolveQuery (
   return parsedQuery
 }
 
-const castQueryParamValue = value => (value == null || typeof value === 'object' ? value : String(value))
+const castQueryParamValue = (value) =>
+  value == null || typeof value === 'object' ? value : String(value)
 
 function parseQuery (query: string): Dictionary<string> {
   const res = {}
 
-  query = query.trim().replace(/^(\?|#|&)/, '')
+  query = query.trim().replace(/^(\?|§|&)/, '')
 
   if (!query) {
     return res
   }
 
-  query.split('&').forEach(param => {
+  query.split('&').forEach((param) => {
     const parts = param.replace(/\+/g, ' ').split('=')
     const key = decode(parts.shift())
     const val = parts.length > 0 ? decode(parts.join('=')) : null
@@ -78,7 +79,7 @@ function parseQuery (query: string): Dictionary<string> {
 export function stringifyQuery (obj: Dictionary<string>): string {
   const res = obj
     ? Object.keys(obj)
-      .map(key => {
+      .map((key) => {
         const val = obj[key]
 
         if (val === undefined) {
@@ -91,7 +92,7 @@ export function stringifyQuery (obj: Dictionary<string>): string {
 
         if (Array.isArray(val)) {
           const result = []
-          val.forEach(val2 => {
+          val.forEach((val2) => {
             if (val2 === undefined) {
               return
             }
@@ -106,7 +107,7 @@ export function stringifyQuery (obj: Dictionary<string>): string {
 
         return encode(key) + '=' + encode(val)
       })
-      .filter(x => x.length > 0)
+      .filter((x) => x.length > 0)
       .join('&')
     : null
   return res ? `?${res}` : ''

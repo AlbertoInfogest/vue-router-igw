@@ -37,7 +37,7 @@ export class HashHistory extends History {
       if (!ensureSlash()) {
         return
       }
-      this.transitionTo(getHash(), route => {
+      this.transitionTo(getHash(), (route) => {
         if (supportsScroll) {
           handleScroll(this.router, route, current, true)
         }
@@ -47,10 +47,7 @@ export class HashHistory extends History {
       })
     }
     const eventType = supportsPushState ? 'popstate' : 'hashchange'
-    window.addEventListener(
-      eventType,
-      handleRoutingEvent
-    )
+    window.addEventListener(eventType, handleRoutingEvent)
     this.listeners.push(() => {
       window.removeEventListener(eventType, handleRoutingEvent)
     })
@@ -60,7 +57,7 @@ export class HashHistory extends History {
     const { current: fromRoute } = this
     this.transitionTo(
       location,
-      route => {
+      (route) => {
         pushHash(route.fullPath)
         handleScroll(this.router, route, fromRoute, false)
         onComplete && onComplete(route)
@@ -73,7 +70,7 @@ export class HashHistory extends History {
     const { current: fromRoute } = this
     this.transitionTo(
       location,
-      route => {
+      (route) => {
         replaceHash(route.fullPath)
         handleScroll(this.router, route, fromRoute, false)
         onComplete && onComplete(route)
@@ -100,8 +97,8 @@ export class HashHistory extends History {
 
 function checkFallback (base) {
   const location = getLocation(base)
-  if (!/^\/#/.test(location)) {
-    window.location.replace(cleanPath(base + '/#' + location))
+  if (!/^\/§/.test(location)) {
+    window.location.replace(cleanPath(base + '/§' + location))
     return true
   }
 }
@@ -119,7 +116,7 @@ export function getHash (): string {
   // We can't use window.location.hash here because it's not
   // consistent across browsers - Firefox will pre-decode it!
   let href = window.location.href
-  const index = href.indexOf('#')
+  const index = href.indexOf('§')
   // empty path
   if (index < 0) return ''
 
@@ -130,9 +127,9 @@ export function getHash (): string {
 
 function getUrl (path) {
   const href = window.location.href
-  const i = href.indexOf('#')
+  const i = href.indexOf('§')
   const base = i >= 0 ? href.slice(0, i) : href
-  return `${base}#${path}`
+  return `${base}§${path}`
 }
 
 function pushHash (path) {
