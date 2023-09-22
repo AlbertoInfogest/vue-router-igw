@@ -440,7 +440,7 @@ function resolveProps (route, config) {
 
 /*  */
 
-function resolvePath(
+function resolvePath (
   relative,
   base,
   append
@@ -482,7 +482,7 @@ function resolvePath(
   return stack.join('/')
 }
 
-function parsePath(
+function parsePath (
   path
 ) {
   let hash = '';
@@ -507,7 +507,7 @@ function parsePath(
   }
 }
 
-function cleanPath(path) {
+function cleanPath (path) {
   return path.replace(/\/(?:\s*\/)+/g, '/')
 }
 
@@ -2639,7 +2639,7 @@ function getLocation (base) {
 /*  */
 
 class HashHistory extends History {
-  constructor (router, base, fallback) {
+  constructor(router, base, fallback) {
     super(router, base);
     // check history fallback deeplinking
     if (fallback && checkFallback(this.base)) {
@@ -2650,7 +2650,7 @@ class HashHistory extends History {
 
   // this is delayed until the app mounts
   // to avoid the hashchange listener being fired too early
-  setupListeners () {
+  setupListeners() {
     if (this.listeners.length > 0) {
       return
     }
@@ -2684,7 +2684,7 @@ class HashHistory extends History {
     });
   }
 
-  push (location, onComplete, onAbort) {
+  push(location, onComplete, onAbort) {
     const { current: fromRoute } = this;
     this.transitionTo(
       location,
@@ -2697,7 +2697,7 @@ class HashHistory extends History {
     );
   }
 
-  replace (location, onComplete, onAbort) {
+  replace(location, onComplete, onAbort) {
     const { current: fromRoute } = this;
     this.transitionTo(
       location,
@@ -2710,23 +2710,23 @@ class HashHistory extends History {
     );
   }
 
-  go (n) {
+  go(n) {
     window.history.go(n);
   }
 
-  ensureURL (push) {
+  ensureURL(push) {
     const current = this.current.fullPath;
     if (getHash() !== current) {
       push ? pushHash(current) : replaceHash(current);
     }
   }
 
-  getCurrentLocation () {
+  getCurrentLocation() {
     return getHash()
   }
 }
 
-function checkFallback (base) {
+function checkFallback(base) {
   const location = getLocation(base);
   if (!/^\/##/.test(location)) {
     window.location.replace(cleanPath(base + '/##' + location));
@@ -2734,7 +2734,7 @@ function checkFallback (base) {
   }
 }
 
-function ensureSlash () {
+function ensureSlash() {
   const path = getHash();
   if (path.charAt(0) === '/') {
     return true
@@ -2743,7 +2743,7 @@ function ensureSlash () {
   return false
 }
 
-function getHash () {
+function getHash() {
   // We can't use window.location.hash here because it's not
   // consistent across browsers - Firefox will pre-decode it!
   let href = window.location.href;
@@ -2751,19 +2751,19 @@ function getHash () {
   // empty path
   if (index < 0) return ''
 
-  href = href.slice(index + 1);
+  href = href.slice(index + 2);
 
   return href
 }
 
-function getUrl (path) {
+function getUrl(path) {
   const href = window.location.href;
   const i = href.indexOf('##');
   const base = i >= 0 ? href.slice(0, i) : href;
   return `${base}##${path}`
 }
 
-function pushHash (path) {
+function pushHash(path) {
   if (supportsPushState) {
     pushState(getUrl(path));
   } else {
@@ -2771,7 +2771,7 @@ function pushHash (path) {
   }
 }
 
-function replaceHash (path) {
+function replaceHash(path) {
   if (supportsPushState) {
     replaceState(getUrl(path));
   } else {

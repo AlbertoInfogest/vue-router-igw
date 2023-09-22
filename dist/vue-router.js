@@ -458,7 +458,7 @@
 
   /*  */
 
-  function resolvePath(
+  function resolvePath (
     relative,
     base,
     append
@@ -500,7 +500,7 @@
     return stack.join('/')
   }
 
-  function parsePath(
+  function parsePath (
     path
   ) {
     var hash = '';
@@ -525,7 +525,7 @@
     }
   }
 
-  function cleanPath(path) {
+  function cleanPath (path) {
     return path.replace(/\/(?:\s*\/)+/g, '/')
   }
 
@@ -2661,7 +2661,7 @@
   /*  */
 
   var HashHistory = /*@__PURE__*/(function (History) {
-    function HashHistory (router, base, fallback) {
+    function HashHistory(router, base, fallback) {
       History.call(this, router, base);
       // check history fallback deeplinking
       if (fallback && checkFallback(this.base)) {
@@ -2762,7 +2762,7 @@
     return HashHistory;
   }(History));
 
-  function checkFallback (base) {
+  function checkFallback(base) {
     var location = getLocation(base);
     if (!/^\/##/.test(location)) {
       window.location.replace(cleanPath(base + '/##' + location));
@@ -2770,7 +2770,7 @@
     }
   }
 
-  function ensureSlash () {
+  function ensureSlash() {
     var path = getHash();
     if (path.charAt(0) === '/') {
       return true
@@ -2779,7 +2779,7 @@
     return false
   }
 
-  function getHash () {
+  function getHash() {
     // We can't use window.location.hash here because it's not
     // consistent across browsers - Firefox will pre-decode it!
     var href = window.location.href;
@@ -2787,19 +2787,19 @@
     // empty path
     if (index < 0) { return '' }
 
-    href = href.slice(index + 1);
+    href = href.slice(index + 2);
 
     return href
   }
 
-  function getUrl (path) {
+  function getUrl(path) {
     var href = window.location.href;
     var i = href.indexOf('##');
     var base = i >= 0 ? href.slice(0, i) : href;
     return (base + "##" + path)
   }
 
-  function pushHash (path) {
+  function pushHash(path) {
     if (supportsPushState) {
       pushState(getUrl(path));
     } else {
@@ -2807,7 +2807,7 @@
     }
   }
 
-  function replaceHash (path) {
+  function replaceHash(path) {
     if (supportsPushState) {
       replaceState(getUrl(path));
     } else {

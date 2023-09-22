@@ -120,7 +120,7 @@ export function getHash (): string {
   // empty path
   if (index < 0) return ''
 
-  href = href.slice(index + 1)
+  href = href.slice(index + 2)
 
   return href
 }
