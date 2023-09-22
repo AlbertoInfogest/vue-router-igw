@@ -64,10 +64,10 @@ export function handleScroll (
 
     if (typeof shouldScroll.then === 'function') {
       shouldScroll
-        .then((shouldScroll) => {
+        .then(shouldScroll => {
           scrollToPosition((shouldScroll: any), position)
         })
-        .catch((err) => {
+        .catch(err => {
           if (process.env.NODE_ENV !== 'production') {
             assert(false, err.toString())
           }
@@ -134,7 +134,7 @@ function isNumber (v: any): boolean {
   return typeof v === 'number'
 }
 
-const hashStartsWithNumberRE = /^§\d/
+const hashStartsWithNumberRE = /^#\d/
 
 function scrollToPosition (shouldScroll, position) {
   const isObject = typeof shouldScroll === 'object'
