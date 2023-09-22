@@ -38,7 +38,7 @@ const encode = str =>
     .replace(encodeReserveRE, encodeReserveReplacer)
     .replace(commaRE, ',');
 
-function decode(str) {
+function decode (str) {
   try {
     return decodeURIComponent(str)
   } catch (err) {
@@ -49,7 +49,7 @@ function decode(str) {
   return str
 }
 
-function resolveQuery(
+function resolveQuery (
   query,
   extraQuery = {},
   _parseQuery
@@ -74,7 +74,7 @@ function resolveQuery(
 const castQueryParamValue = value =>
   value == null || typeof value === 'object' ? value : String(value);
 
-function parseQuery(query) {
+function parseQuery (query) {
   const res = {};
 
   query = query.trim().replace(/^(\?|##|&)/, '');
@@ -100,39 +100,39 @@ function parseQuery(query) {
   return res
 }
 
-function stringifyQuery(obj) {
+function stringifyQuery (obj) {
   const res = obj
     ? Object.keys(obj)
-        .map(key => {
-          const val = obj[key];
+      .map(key => {
+        const val = obj[key];
 
-          if (val === undefined) {
-            return ''
-          }
+        if (val === undefined) {
+          return ''
+        }
 
-          if (val === null) {
-            return encode(key)
-          }
+        if (val === null) {
+          return encode(key)
+        }
 
-          if (Array.isArray(val)) {
-            const result = [];
-            val.forEach(val2 => {
-              if (val2 === undefined) {
-                return
-              }
-              if (val2 === null) {
-                result.push(encode(key));
-              } else {
-                result.push(encode(key) + '=' + encode(val2));
-              }
-            });
-            return result.join('&')
-          }
+        if (Array.isArray(val)) {
+          const result = [];
+          val.forEach(val2 => {
+            if (val2 === undefined) {
+              return
+            }
+            if (val2 === null) {
+              result.push(encode(key));
+            } else {
+              result.push(encode(key) + '=' + encode(val2));
+            }
+          });
+          return result.join('&')
+        }
 
-          return encode(key) + '=' + encode(val)
-        })
-        .filter(x => x.length > 0)
-        .join('&')
+        return encode(key) + '=' + encode(val)
+      })
+      .filter(x => x.length > 0)
+      .join('&')
     : null;
   return res ? `?${res}` : ''
 }
@@ -488,7 +488,7 @@ function parsePath(
   let hash = '';
   let query = '';
 
-  const hashIndex = path.indexOf('#');
+  const hashIndex = path.indexOf('##');
   if (hashIndex >= 0) {
     hash = path.slice(hashIndex);
     path = path.slice(0, hashIndex);
@@ -979,7 +979,7 @@ function fillParams (
 
 /*  */
 
-function normalizeLocation(
+function normalizeLocation (
   raw,
   current,
   append,
@@ -1766,7 +1766,7 @@ function setStateKey (key) {
 
 const positionStore = Object.create(null);
 
-function setupScroll() {
+function setupScroll () {
   // Prevent browser scroll behavior on History popstate
   if ('scrollRestoration' in window.history) {
     window.history.scrollRestoration = 'manual';
@@ -1788,7 +1788,7 @@ function setupScroll() {
   }
 }
 
-function handleScroll(
+function handleScroll (
   router,
   to,
   from,
@@ -1837,7 +1837,7 @@ function handleScroll(
   });
 }
 
-function saveScrollPosition() {
+function saveScrollPosition () {
   const key = getStateKey();
   if (key) {
     positionStore[key] = {
@@ -1847,21 +1847,21 @@ function saveScrollPosition() {
   }
 }
 
-function handlePopState(e) {
+function handlePopState (e) {
   saveScrollPosition();
   if (e.state && e.state.key) {
     setStateKey(e.state.key);
   }
 }
 
-function getScrollPosition() {
+function getScrollPosition () {
   const key = getStateKey();
   if (key) {
     return positionStore[key]
   }
 }
 
-function getElementPosition(el, offset) {
+function getElementPosition (el, offset) {
   const docEl = document.documentElement;
   const docRect = docEl.getBoundingClientRect();
   const elRect = el.getBoundingClientRect();
@@ -1871,31 +1871,31 @@ function getElementPosition(el, offset) {
   }
 }
 
-function isValidPosition(obj) {
+function isValidPosition (obj) {
   return isNumber(obj.x) || isNumber(obj.y)
 }
 
-function normalizePosition(obj) {
+function normalizePosition (obj) {
   return {
     x: isNumber(obj.x) ? obj.x : window.pageXOffset,
     y: isNumber(obj.y) ? obj.y : window.pageYOffset
   }
 }
 
-function normalizeOffset(obj) {
+function normalizeOffset (obj) {
   return {
     x: isNumber(obj.x) ? obj.x : 0,
     y: isNumber(obj.y) ? obj.y : 0
   }
 }
 
-function isNumber(v) {
+function isNumber (v) {
   return typeof v === 'number'
 }
 
 const hashStartsWithNumberRE = /^##\d/;
 
-function scrollToPosition(shouldScroll, position) {
+function scrollToPosition (shouldScroll, position) {
   const isObject = typeof shouldScroll === 'object';
   if (isObject && typeof shouldScroll.selector === 'string') {
     // getElementById would still fail if the selector contains a more complicated query like #main[data-attr]
@@ -2639,7 +2639,7 @@ function getLocation (base) {
 /*  */
 
 class HashHistory extends History {
-  constructor(router, base, fallback) {
+  constructor (router, base, fallback) {
     super(router, base);
     // check history fallback deeplinking
     if (fallback && checkFallback(this.base)) {
@@ -2650,7 +2650,7 @@ class HashHistory extends History {
 
   // this is delayed until the app mounts
   // to avoid the hashchange listener being fired too early
-  setupListeners() {
+  setupListeners () {
     if (this.listeners.length > 0) {
       return
     }
@@ -2684,7 +2684,7 @@ class HashHistory extends History {
     });
   }
 
-  push(location, onComplete, onAbort) {
+  push (location, onComplete, onAbort) {
     const { current: fromRoute } = this;
     this.transitionTo(
       location,
@@ -2697,7 +2697,7 @@ class HashHistory extends History {
     );
   }
 
-  replace(location, onComplete, onAbort) {
+  replace (location, onComplete, onAbort) {
     const { current: fromRoute } = this;
     this.transitionTo(
       location,
@@ -2710,23 +2710,23 @@ class HashHistory extends History {
     );
   }
 
-  go(n) {
+  go (n) {
     window.history.go(n);
   }
 
-  ensureURL(push) {
+  ensureURL (push) {
     const current = this.current.fullPath;
     if (getHash() !== current) {
       push ? pushHash(current) : replaceHash(current);
     }
   }
 
-  getCurrentLocation() {
+  getCurrentLocation () {
     return getHash()
   }
 }
 
-function checkFallback(base) {
+function checkFallback (base) {
   const location = getLocation(base);
   if (!/^\/##/.test(location)) {
     window.location.replace(cleanPath(base + '/##' + location));
@@ -2734,7 +2734,7 @@ function checkFallback(base) {
   }
 }
 
-function ensureSlash() {
+function ensureSlash () {
   const path = getHash();
   if (path.charAt(0) === '/') {
     return true
@@ -2743,7 +2743,7 @@ function ensureSlash() {
   return false
 }
 
-function getHash() {
+function getHash () {
   // We can't use window.location.hash here because it's not
   // consistent across browsers - Firefox will pre-decode it!
   let href = window.location.href;
@@ -2756,14 +2756,14 @@ function getHash() {
   return href
 }
 
-function getUrl(path) {
+function getUrl (path) {
   const href = window.location.href;
   const i = href.indexOf('##');
   const base = i >= 0 ? href.slice(0, i) : href;
   return `${base}##${path}`
 }
 
-function pushHash(path) {
+function pushHash (path) {
   if (supportsPushState) {
     pushState(getUrl(path));
   } else {
@@ -2771,7 +2771,7 @@ function pushHash(path) {
   }
 }
 
-function replaceHash(path) {
+function replaceHash (path) {
   if (supportsPushState) {
     replaceState(getUrl(path));
   } else {

@@ -52,7 +52,7 @@ export function parsePath (
   let hash = ''
   let query = ''
 
-  const hashIndex = path.indexOf('#')
+  const hashIndex = path.indexOf('##')
   if (hashIndex >= 0) {
     hash = path.slice(hashIndex)
     path = path.slice(0, hashIndex)
