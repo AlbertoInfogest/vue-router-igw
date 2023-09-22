@@ -1,6 +1,6 @@
 /*!
   * vue-router v3.6.5
-  * (c) 2022 Evan You
+  * (c) 2023 Evan You
   * @license MIT
   */
 /*  */
@@ -37,7 +37,7 @@ var encode = function (str) { return encodeURIComponent(str)
     .replace(encodeReserveRE, encodeReserveReplacer)
     .replace(commaRE, ','); };
 
-function decode (str) {
+function decode(str) {
   try {
     return decodeURIComponent(str)
   } catch (err) {
@@ -48,7 +48,7 @@ function decode (str) {
   return str
 }
 
-function resolveQuery (
+function resolveQuery(
   query,
   extraQuery,
   _parseQuery
@@ -72,12 +72,12 @@ function resolveQuery (
   return parsedQuery
 }
 
-var castQueryParamValue = function (value) { return (value == null || typeof value === 'object' ? value : String(value)); };
+var castQueryParamValue = function (value) { return value == null || typeof value === 'object' ? value : String(value); };
 
-function parseQuery (query) {
+function parseQuery(query) {
   var res = {};
 
-  query = query.trim().replace(/^(\?|#|&)/, '');
+  query = query.trim().replace(/^(\?|##|&)/, '');
 
   if (!query) {
     return res
@@ -100,39 +100,39 @@ function parseQuery (query) {
   return res
 }
 
-function stringifyQuery (obj) {
+function stringifyQuery(obj) {
   var res = obj
     ? Object.keys(obj)
-      .map(function (key) {
-        var val = obj[key];
+        .map(function (key) {
+          var val = obj[key];
 
-        if (val === undefined) {
-          return ''
-        }
+          if (val === undefined) {
+            return ''
+          }
 
-        if (val === null) {
-          return encode(key)
-        }
+          if (val === null) {
+            return encode(key)
+          }
 
-        if (Array.isArray(val)) {
-          var result = [];
-          val.forEach(function (val2) {
-            if (val2 === undefined) {
-              return
-            }
-            if (val2 === null) {
-              result.push(encode(key));
-            } else {
-              result.push(encode(key) + '=' + encode(val2));
-            }
-          });
-          return result.join('&')
-        }
+          if (Array.isArray(val)) {
+            var result = [];
+            val.forEach(function (val2) {
+              if (val2 === undefined) {
+                return
+              }
+              if (val2 === null) {
+                result.push(encode(key));
+              } else {
+                result.push(encode(key) + '=' + encode(val2));
+              }
+            });
+            return result.join('&')
+          }
 
-        return encode(key) + '=' + encode(val)
-      })
-      .filter(function (x) { return x.length > 0; })
-      .join('&')
+          return encode(key) + '=' + encode(val)
+        })
+        .filter(function (x) { return x.length > 0; })
+        .join('&')
     : null;
   return res ? ("?" + res) : ''
 }
@@ -452,7 +452,7 @@ function resolveProps (route, config) {
 
 /*  */
 
-function resolvePath (
+function resolvePath(
   relative,
   base,
   append
@@ -462,7 +462,7 @@ function resolvePath (
     return relative
   }
 
-  if (firstChar === '?' || firstChar === '#') {
+  if (firstChar === '?' || firstChar === '##') {
     return base + relative
   }
 
@@ -494,7 +494,9 @@ function resolvePath (
   return stack.join('/')
 }
 
-function parsePath (path) {
+function parsePath(
+  path
+) {
   var hash = '';
   var query = '';
 
@@ -517,7 +519,7 @@ function parsePath (path) {
   }
 }
 
-function cleanPath (path) {
+function cleanPath(path) {
   return path.replace(/\/(?:\s*\/)+/g, '/')
 }
 
@@ -989,7 +991,7 @@ function fillParams (
 
 /*  */
 
-function normalizeLocation (
+function normalizeLocation(
   raw,
   current,
   append,
@@ -1038,8 +1040,8 @@ function normalizeLocation (
   );
 
   var hash = next.hash || parsedPath.hash;
-  if (hash && hash.charAt(0) !== '#') {
-    hash = "#" + hash;
+  if (hash && hash.charAt(0) !== '##') {
+    hash = "##" + hash;
   }
 
   return {
@@ -1784,7 +1786,7 @@ function setStateKey (key) {
 
 var positionStore = Object.create(null);
 
-function setupScroll () {
+function setupScroll() {
   // Prevent browser scroll behavior on History popstate
   if ('scrollRestoration' in window.history) {
     window.history.scrollRestoration = 'manual';
@@ -1806,7 +1808,7 @@ function setupScroll () {
   }
 }
 
-function handleScroll (
+function handleScroll(
   router,
   to,
   from,
@@ -1855,7 +1857,7 @@ function handleScroll (
   });
 }
 
-function saveScrollPosition () {
+function saveScrollPosition() {
   var key = getStateKey();
   if (key) {
     positionStore[key] = {
@@ -1865,21 +1867,21 @@ function saveScrollPosition () {
   }
 }
 
-function handlePopState (e) {
+function handlePopState(e) {
   saveScrollPosition();
   if (e.state && e.state.key) {
     setStateKey(e.state.key);
   }
 }
 
-function getScrollPosition () {
+function getScrollPosition() {
   var key = getStateKey();
   if (key) {
     return positionStore[key]
   }
 }
 
-function getElementPosition (el, offset) {
+function getElementPosition(el, offset) {
   var docEl = document.documentElement;
   var docRect = docEl.getBoundingClientRect();
   var elRect = el.getBoundingClientRect();
@@ -1889,31 +1891,31 @@ function getElementPosition (el, offset) {
   }
 }
 
-function isValidPosition (obj) {
+function isValidPosition(obj) {
   return isNumber(obj.x) || isNumber(obj.y)
 }
 
-function normalizePosition (obj) {
+function normalizePosition(obj) {
   return {
     x: isNumber(obj.x) ? obj.x : window.pageXOffset,
     y: isNumber(obj.y) ? obj.y : window.pageYOffset
   }
 }
 
-function normalizeOffset (obj) {
+function normalizeOffset(obj) {
   return {
     x: isNumber(obj.x) ? obj.x : 0,
     y: isNumber(obj.y) ? obj.y : 0
   }
 }
 
-function isNumber (v) {
+function isNumber(v) {
   return typeof v === 'number'
 }
 
-var hashStartsWithNumberRE = /^#\d/;
+var hashStartsWithNumberRE = /^##\d/;
 
-function scrollToPosition (shouldScroll, position) {
+function scrollToPosition(shouldScroll, position) {
   var isObject = typeof shouldScroll === 'object';
   if (isObject && typeof shouldScroll.selector === 'string') {
     // getElementById would still fail if the selector contains a more complicated query like #main[data-attr]
@@ -2653,7 +2655,7 @@ function getLocation (base) {
 /*  */
 
 var HashHistory = /*@__PURE__*/(function (History) {
-  function HashHistory (router, base, fallback) {
+  function HashHistory(router, base, fallback) {
     History.call(this, router, base);
     // check history fallback deeplinking
     if (fallback && checkFallback(this.base)) {
@@ -2698,10 +2700,7 @@ var HashHistory = /*@__PURE__*/(function (History) {
       });
     };
     var eventType = supportsPushState ? 'popstate' : 'hashchange';
-    window.addEventListener(
-      eventType,
-      handleRoutingEvent
-    );
+    window.addEventListener(eventType, handleRoutingEvent);
     this.listeners.push(function () {
       window.removeEventListener(eventType, handleRoutingEvent);
     });
@@ -2757,15 +2756,15 @@ var HashHistory = /*@__PURE__*/(function (History) {
   return HashHistory;
 }(History));
 
-function checkFallback (base) {
+function checkFallback(base) {
   var location = getLocation(base);
-  if (!/^\/#/.test(location)) {
-    window.location.replace(cleanPath(base + '/#' + location));
+  if (!/^\/##/.test(location)) {
+    window.location.replace(cleanPath(base + '/##' + location));
     return true
   }
 }
 
-function ensureSlash () {
+function ensureSlash() {
   var path = getHash();
   if (path.charAt(0) === '/') {
     return true
@@ -2774,11 +2773,11 @@ function ensureSlash () {
   return false
 }
 
-function getHash () {
+function getHash() {
   // We can't use window.location.hash here because it's not
   // consistent across browsers - Firefox will pre-decode it!
   var href = window.location.href;
-  var index = href.indexOf('#');
+  var index = href.indexOf('##');
   // empty path
   if (index < 0) { return '' }
 
@@ -2787,14 +2786,14 @@ function getHash () {
   return href
 }
 
-function getUrl (path) {
+function getUrl(path) {
   var href = window.location.href;
-  var i = href.indexOf('#');
+  var i = href.indexOf('##');
   var base = i >= 0 ? href.slice(0, i) : href;
-  return (base + "#" + path)
+  return (base + "##" + path)
 }
 
-function pushHash (path) {
+function pushHash(path) {
   if (supportsPushState) {
     pushState(getUrl(path));
   } else {
@@ -2802,7 +2801,7 @@ function pushHash (path) {
   }
 }
 
-function replaceHash (path) {
+function replaceHash(path) {
   if (supportsPushState) {
     replaceState(getUrl(path));
   } else {

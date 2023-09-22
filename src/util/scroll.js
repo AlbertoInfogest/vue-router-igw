@@ -134,7 +134,7 @@ function isNumber (v: any): boolean {
   return typeof v === 'number'
 }
 
-const hashStartsWithNumberRE = /^#\d/
+const hashStartsWithNumberRE = /^##\d/
 
 function scrollToPosition (shouldScroll, position) {
   const isObject = typeof shouldScroll === 'object'

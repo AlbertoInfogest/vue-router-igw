@@ -56,8 +56,8 @@ export function normalizeLocation (
   )
 
   let hash = next.hash || parsedPath.hash
-  if (hash && hash.charAt(0) !== '#') {
-    hash = `#${hash}`
+  if (hash && hash.charAt(0) !== '##') {
+    hash = `##${hash}`
   }
 
   return {

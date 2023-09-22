@@ -47,12 +47,13 @@ export function resolveQuery (
   return parsedQuery
 }
 
-const castQueryParamValue = value => (value == null || typeof value === 'object' ? value : String(value))
+const castQueryParamValue = value =>
+  value == null || typeof value === 'object' ? value : String(value)
 
 function parseQuery (query: string): Dictionary<string> {
   const res = {}
 
-  query = query.trim().replace(/^(\?|#|&)/, '')
+  query = query.trim().replace(/^(\?|##|&)/, '')
 
   if (!query) {
     return res

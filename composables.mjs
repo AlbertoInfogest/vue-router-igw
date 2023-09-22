@@ -1,6 +1,6 @@
 /*!
   * vue-router v3.6.5
-  * (c) 2022 Evan You
+  * (c) 2023 Evan You
   * @license MIT
   */
 import { getCurrentInstance, effectScope, shallowReactive, onUnmounted, computed, unref } from 'vue';
